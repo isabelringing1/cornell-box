@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028334, g: 0.22571336, b: 0.3069219, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028352, g: 0.22571376, b: 0.30692244, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -228,7 +228,6 @@ GameObject:
   - component: {fileID: 531871825}
   - component: {fileID: 531871824}
   - component: {fileID: 531871826}
-  - component: {fileID: 531871827}
   m_Layer: 0
   m_Name: Drawer
   m_TagString: Untagged
@@ -282,19 +281,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _drawerFloor: {fileID: 1034804156}
---- !u!65 &531871827
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 531871823}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 5.0743313, y: 0.63497967, z: 3.0170255}
-  m_Center: {x: 2.452649, y: -0.07248986, z: 0.009019375}
 --- !u!1 &614685380
 GameObject:
   m_ObjectHideFlags: 0
@@ -308,6 +294,7 @@ GameObject:
   - component: {fileID: 614685383}
   - component: {fileID: 614685382}
   - component: {fileID: 614685385}
+  - component: {fileID: 614685386}
   m_Layer: 0
   m_Name: Sphere
   m_TagString: Untagged
@@ -409,6 +396,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &614685386
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 614685380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91a5b23403a134cd7aab28d6789f1f29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _showPos: {x: 0, y: 1.79, z: 0}
+  _rotationBoundsX: {x: 0, y: 0}
+  _rotationBoundsY: {x: 0, y: 0}
+  _rotateSpeed: 100
 --- !u!1 &624117768
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,6 +653,22 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.0011660962, y: 0.0031447953, z: 0.0010759953}
   m_Center: {x: -0.0004275044, y: 0, z: 0}
+--- !u!114 &833717145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 833717134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91a5b23403a134cd7aab28d6789f1f29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _showPos: {x: 0, y: 1.79, z: 0}
+  _rotationBoundsX: {x: -48, y: 48}
+  _rotationBoundsY: {x: -48, y: 48}
+  _rotateSpeed: 200
 --- !u!1 &858424028
 GameObject:
   m_ObjectHideFlags: 0
@@ -695,7 +714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _floor: {fileID: 1034804156}
-  _thrust: 600
+  _heldContainer: {fileID: 1720579462}
 --- !u!1 &1034804156
 GameObject:
   m_ObjectHideFlags: 0
@@ -1174,6 +1193,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91a5b23403a134cd7aab28d6789f1f29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _showPos: {x: 0, y: 1.79, z: 0}
+  _rotationBoundsX: {x: 0, y: 0}
+  _rotationBoundsY: {x: 0, y: 0}
+  _rotateSpeed: 100
+--- !u!1 &1720579462
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1720579463}
+  m_Layer: 0
+  m_Name: HeldContainer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1720579463
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1720579462}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.79, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1780022551
 GameObject:
   m_ObjectHideFlags: 0
@@ -1368,6 +1422,7 @@ GameObject:
   - component: {fileID: 2078490458}
   - component: {fileID: 2078490457}
   - component: {fileID: 2078490456}
+  - component: {fileID: 2078490460}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -1469,6 +1524,22 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2078490454}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &2078490460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2078490454}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91a5b23403a134cd7aab28d6789f1f29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _showPos: {x: 0, y: 1.79, z: 0}
+  _rotationBoundsX: {x: 0, y: 0}
+  _rotationBoundsY: {x: 0, y: 0}
+  _rotateSpeed: 100
 --- !u!1 &2097215414
 GameObject:
   m_ObjectHideFlags: 0
@@ -1482,6 +1553,7 @@ GameObject:
   - component: {fileID: 2097215418}
   - component: {fileID: 2097215417}
   - component: {fileID: 2097215420}
+  - component: {fileID: 2097215421}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -1584,3 +1656,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2097215421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097215414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91a5b23403a134cd7aab28d6789f1f29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _showPos: {x: 0, y: 1.79, z: 0}
+  _rotationBoundsX: {x: 0, y: 0}
+  _rotationBoundsY: {x: 0, y: 0}
+  _rotateSpeed: 100

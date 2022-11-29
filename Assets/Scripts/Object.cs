@@ -5,11 +5,16 @@ using UnityEngine;
 
 public class Object : MonoBehaviour
 {
-	public delegate void ObjectHeldDelegate();
-
-	public ObjectHeldDelegate _onObjectHeld;
+	public delegate void ObjectHeldDelegate(Object obj);
+	public ObjectHeldDelegate OnObjectHeld;
+	public float RotateSpeed => _rotateSpeed;
+	public Vector2 RotationBoundsX => _rotationBoundsX;
+	public Vector2 RotationBoundsY => _rotationBoundsY;
 
 	[SerializeField] private Vector3 _showPos = new Vector3(0, 1.79f, 0);
+	[SerializeField] private Vector2 _rotationBoundsX = new Vector2(0, 0);
+	[SerializeField] private Vector2 _rotationBoundsY = new Vector2(0, 0);
+	[SerializeField] private float _rotateSpeed = 100f;
 	private Rigidbody _rigidbody;
 	private bool _held;
 
@@ -30,7 +35,7 @@ public class Object : MonoBehaviour
 	    _held = true;
 	    _rigidbody.useGravity = false;
 	    transform.position = _showPos;
-	    _onObjectHeld?.Invoke();
+	    OnObjectHeld?.Invoke(this);
     }
 }
     

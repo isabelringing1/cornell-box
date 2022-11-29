@@ -6,9 +6,11 @@ using UnityEngine;
 public class SceneController : MonoBehaviour
 {
     [SerializeField] private GameObject _floor;
+    [SerializeField] private GameObject _heldContainer;
 
     private Rigidbody _floorRigidbody;
     private bool _mouseDown;
+    private Object _heldObject;
     private bool _objectHeld;
     private float _targetZ = -2.85f;
 
@@ -23,7 +25,7 @@ public class SceneController : MonoBehaviour
         _objects = GameObject.FindObjectsOfType<Object>();
         foreach (Object obj in _objects)
         {
-            obj._onObjectHeld += OnObjectHeld;
+            obj.OnObjectHeld += OnObjectHeld;
         }
     }
     
@@ -31,7 +33,23 @@ public class SceneController : MonoBehaviour
     {
         if (_objectHeld)
         {
-            return;
+            if (Input.GetMouseButton(0))
+            {
+                Transform t = _heldContainer.transform;
+                float xMov = Input.GetAxis("Mouse X");
+                float yMov = Input.GetAxis("Mouse Y");
+                if (t.rotation.eulerAngles.z < _heldObject.RotationBoundsX[0] || t.rotation.eulerAngles.z > _heldObject.RotationBoundsX[1])
+                {
+                    xMov = 0;
+                }
+                if (t.rotation.eulerAngles.x < _heldObject.RotationBoundsY[0] || t.rotation.eulerAngles.x > _heldObject.RotationBoundsY[1])
+                {
+                    yMov = 0;
+                }
+                Vector3 rotationVector = new Vector3(yMov, 0, -xMov);
+                t.Rotate(eulers: rotationVector * Time.deltaTime * _heldObject.RotateSpeed);
+                return;
+            }
         }
         
         // detect mouse press
@@ -60,9 +78,11 @@ public class SceneController : MonoBehaviour
         }
     }
 
-    private void OnObjectHeld()
+    private void OnObjectHeld(Object obj)
     {
+        _heldObject = obj;
         _objectHeld = true;
+        _heldObject.transform.SetParent(p: _heldContainer.transform);
     }
 }
 
