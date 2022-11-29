@@ -6,11 +6,13 @@ using UnityEngine;
 public class SceneController : MonoBehaviour
 {
     [SerializeField] private GameObject _floor;
-    [SerializeField] private float _thrust = 20f;
 
     private Rigidbody _floorRigidbody;
     private bool _mouseDown;
+    private bool _objectHeld;
     private float _targetZ = -2.85f;
+
+    private Object[] _objects;
 
     void Start()
     {
@@ -18,10 +20,20 @@ public class SceneController : MonoBehaviour
         {
             _floorRigidbody = _floor.GetComponent<Rigidbody>();
         }
+        _objects = GameObject.FindObjectsOfType<Object>();
+        foreach (Object obj in _objects)
+        {
+            obj._onObjectHeld += OnObjectHeld;
+        }
     }
     
     public void Update()
     {
+        if (_objectHeld)
+        {
+            return;
+        }
+        
         // detect mouse press
         if (!_mouseDown && Input.GetMouseButtonDown(0))
         {
@@ -46,6 +58,11 @@ public class SceneController : MonoBehaviour
         {
             _mouseDown = false;
         }
+    }
+
+    private void OnObjectHeld()
+    {
+        _objectHeld = true;
     }
 }
 
