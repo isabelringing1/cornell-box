@@ -21,6 +21,7 @@ public class SceneController : MonoBehaviour
     [SerializeField] private Button _keepButton;
     [SerializeField] private Button _trashButton;
     [SerializeField] private GameObject _instructions;
+    [SerializeField] private Light _spotlight;
 
     private Rigidbody _floorRigidbody;
     private bool _mouseDown;
@@ -85,6 +86,8 @@ public class SceneController : MonoBehaviour
 
         _textShowWait = new WaitForSeconds(seconds: _textShowWaitSeconds);
         _textFillWait = new WaitForSeconds(seconds: _textFillSeconds);
+        
+        AnimateCamera();
     }
 
     public void Update()
@@ -144,7 +147,6 @@ public class SceneController : MonoBehaviour
     private void OnObjectClicked(Object obj)
     {
         if (_objectHeld) return;
-        
         _heldObject = obj;
         _heldObject.transform.SetParent(p: _heldContainer.transform);
         _heldObject.SetHeld();
@@ -252,5 +254,17 @@ public class SceneController : MonoBehaviour
         _selectedChoice = true;
     }
 
+    private void AnimateCamera()
+    {
+        if (_camera.GetComponent<Animation>() is Animation anim1)
+        {
+            anim1.Play();
+        }
+
+        if (_spotlight.GetComponent<Animation>() is Animation anim2)
+        {
+            anim2.Play();
+        }
+    }
 }
 

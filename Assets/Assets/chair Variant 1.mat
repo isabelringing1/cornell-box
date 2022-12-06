@@ -7,9 +7,9 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: knob Variant
+  m_Name: chair Variant 1
   m_Shader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
-  m_Parent: {fileID: 6520929635897901770, guid: 0469ed0b111544622990ba48caed688d, type: 3}
+  m_Parent: {fileID: 8216533007623585647, guid: e615bc7df7fe74faeb17abf69cbcaf50, type: 3}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
@@ -25,8 +25,8 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
-    - _Glossiness: 0.44
-    - _Metallic: 1
+    - _Glossiness: 0.253
+    - _Metallic: 0.791
     m_Colors:
-    - _Color: {r: 0.7264151, g: 0.7264151, b: 0.7264151, a: 1}
+    - _Color: {r: 0.2226771, g: 0.22267966, b: 0.33962262, a: 1}
   m_BuildTextureStacks: []
