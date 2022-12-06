@@ -85,8 +85,6 @@ public class SceneController : MonoBehaviour
 
         _textShowWait = new WaitForSeconds(seconds: _textShowWaitSeconds);
         _textFillWait = new WaitForSeconds(seconds: _textFillSeconds);
-        
-        
     }
 
     public void Update()
