@@ -12,6 +12,7 @@ public class SceneController : MonoBehaviour
     [SerializeField] private GameObject _heldContainer;
     [SerializeField] private Knob _knob;
     [SerializeField] private TextBox _textbox;
+    [SerializeField] private TextBox _filetextbox;
     [SerializeField] private TextBox _textboxClosed;
     [SerializeField] private TextBox _questionbox;
     [SerializeField] private TextMeshPro _text;
@@ -21,7 +22,14 @@ public class SceneController : MonoBehaviour
     [SerializeField] private Button _keepButton;
     [SerializeField] private Button _trashButton;
     [SerializeField] private GameObject _instructions;
+    [SerializeField] private GameObject _pullInstructions;
     [SerializeField] private Light _spotlight;
+    [SerializeField] private float _introWaitSeconds = 2f;
+    [SerializeField] private float _introCameraAfterWaitSeconds = 1f;
+
+    [SerializeField] private string[] _intro;
+    [SerializeField] private string[] _introAfterCamera;
+    [SerializeField] private string[] _ending;
 
     private Rigidbody _floorRigidbody;
     private bool _mouseDown;
@@ -31,10 +39,16 @@ public class SceneController : MonoBehaviour
     private float _targetZ = -2.85f;
     private WaitForSeconds _textShowWait;
     private WaitForSeconds _textFillWait;
+    private WaitForSeconds _introWait;
+    private WaitForSeconds _introAfterCameraWait;
     private bool _textDone;
     private bool _textContinued;
     private bool _selectedChoice;
     private bool _instructionsShown;
+    private Animation _cameraAnimation; 
+    private Animation _lightAnimation;
+    private bool _interactionEnabled;
+    private bool _drawerPulled;
 
     private Object[] _objects;
 
@@ -55,11 +69,15 @@ public class SceneController : MonoBehaviour
         {
             obj.OnObjectClicked += OnObjectClicked;
         }
-
         if (_textbox != null)
         {
             _textbox.gameObject.SetActive(value: false);
             _textbox.OnTextBoxClicked += OnTextBoxClicked;
+        }
+        if (_filetextbox != null)
+        {
+            _filetextbox.gameObject.SetActive(value: false);
+            _filetextbox.OnTextBoxClicked += OnTextBoxClicked;
         }
         if (_questionbox != null)
         {
@@ -83,15 +101,35 @@ public class SceneController : MonoBehaviour
         {
             _instructions.SetActive(value: false);
         }
+        if (_pullInstructions != null)
+        {
+            _pullInstructions.SetActive(value: false);
+        }
+
+        if (_spotlight != null && _spotlight.GetComponent<Animation>() is Animation anim1)
+        {
+            _lightAnimation = anim1;
+        }
+        if (_camera != null && _camera.GetComponent<Animation>() is Animation anim2)
+        {
+            _cameraAnimation = anim2;
+        }
 
         _textShowWait = new WaitForSeconds(seconds: _textShowWaitSeconds);
         _textFillWait = new WaitForSeconds(seconds: _textFillSeconds);
-        
-        AnimateCamera();
+        _introWait = new WaitForSeconds(seconds: _introWaitSeconds);
+        _introAfterCameraWait = new WaitForSeconds(seconds: _introCameraAfterWaitSeconds);
+
+        StartCoroutine(routine: StartIntroAsync());
     }
 
     public void Update()
     {
+        if (!_interactionEnabled)
+        {
+            return;
+        }
+        
         if (_objectHeld)
         {
             if (_textboxShown) return;
@@ -127,10 +165,15 @@ public class SceneController : MonoBehaviour
         {
             float currentY = Input.mousePosition.y;
             float zConversion = (1 - (currentY / Screen.height)) * _targetZ;
-            //Debug.Log("current y is " + _floor.transform.position.z + " and z conversion is " + zConversion);
+            Debug.Log("current y is " + _floor.transform.position.z + " and z conversion is " + zConversion);
 
-            if (_floor.transform.position.z < 0 || zConversion > 0)
+            if (zConversion > 0)
             {
+                return;
+            }
+            if (_floor.transform.position.z < 0)
+            {
+                _drawerPulled = true;
                 return;
             }
 
@@ -165,51 +208,53 @@ public class SceneController : MonoBehaviour
         if (box.isClosed)
         {
             _instructions.SetActive(value: false);
-            _textboxClosed.gameObject.SetActive(value: false);
-            ShowText(text: _heldObject.Description);
+            box.gameObject.SetActive(value: false);
+            ShowText(text: _heldObject.Description, textBox: _filetextbox, showQuestionBox: true);
             return;
         }
-        
+
         if (_textDone)
         {
             _textContinued = true;
         }
     }
-
-    private void OnKnobHeld()
+    
+    private void ShowText(string[] text, TextBox textBox, bool showQuestionBox)
     {
-        Debug.LogWarning(message: "Knob held");
+        StartCoroutine(routine: ShowTextAsync(text: text, textBox: textBox, showQuestionBox: showQuestionBox));
     }
 
-    private void ShowText(string[] text)
-    {
-        StartCoroutine(routine: ShowTextAsync(text: text));
-    }
-
-    private IEnumerator ShowTextAsync(string[] text)
+    private IEnumerator ShowTextAsync(string[] text, TextBox textBox, bool showQuestionBox)
     {
         _textboxShown = true;
         yield return _textShowWait;
-        _textbox.gameObject.SetActive(value: true);
+        textBox.gameObject.SetActive(value: true);
         
         foreach (var t in text)
         {
-            _text.text = "";
-            _arrow.gameObject.SetActive(value: false);
+            textBox.text.text = "";
+            textBox.arrow.gameObject.SetActive(value: false);
             _textDone = false;
             foreach (var c in t)
             {
-                _text.text += c;
+                textBox.text.text += c;
                 yield return _textFillSeconds;
             }
 
-            _arrow.gameObject.SetActive(value: true);
+            textBox.arrow.gameObject.SetActive(value: true);
             _textDone = true;
             yield return new WaitUntil(() => _textContinued);
             _textContinued = false;
         }
-        _textbox.gameObject.SetActive(value: false);
-        ShowQuestionBox();
+        textBox.gameObject.SetActive(value: false);
+        if (showQuestionBox)
+        {
+            ShowQuestionBox();
+        }
+        else
+        {
+            _textboxShown = false;
+        }
     }
 
     private void ShowQuestionBox()
@@ -254,17 +299,38 @@ public class SceneController : MonoBehaviour
         _selectedChoice = true;
     }
 
+    private IEnumerator StartIntroAsync()
+    {
+        yield return _introWaitSeconds;
+        yield return ShowTextAsync(text: _intro, textBox: _textbox, showQuestionBox: false);
+        AnimateCamera();
+        yield return new WaitUntil(() => !_cameraAnimation.isPlaying);
+        _pullInstructions.SetActive(value: true);
+        _interactionEnabled = true;
+        yield return new WaitUntil(()=> _drawerPulled);
+        _interactionEnabled = false;
+        _pullInstructions.SetActive(value: false);
+        yield return _introAfterCameraWait;
+        yield return ShowTextAsync(text: _introAfterCamera, textBox: _textbox, showQuestionBox: false);
+        _interactionEnabled = true;
+    }
+
     private void AnimateCamera()
     {
-        if (_camera.GetComponent<Animation>() is Animation anim1)
+        if (_cameraAnimation != null)
         {
-            anim1.Play();
+            _cameraAnimation.Play();
         }
 
-        if (_spotlight.GetComponent<Animation>() is Animation anim2)
+        if (_lightAnimation != null)
         {
-            anim2.Play();
+            _lightAnimation.Play();
         }
+    }
+    
+    private void OnKnobHeld()
+    {
+        Debug.LogWarning(message: "Knob held");
     }
 }
 
